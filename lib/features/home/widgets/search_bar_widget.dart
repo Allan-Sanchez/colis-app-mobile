@@ -12,19 +12,25 @@ class SearchBarWidget extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: AppColors.background,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.border),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 12,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Row(
           children: [
-            Icon(Icons.search, color: AppColors.textSecondary, size: 22),
+            const Icon(Icons.search_rounded, color: AppColors.primary, size: 22),
             const SizedBox(width: 12),
             Text(
-              AppStrings.searchHint,
+              'Buscar restaurantes, platillos, negocios...',
               style: TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 15,
+                color: AppColors.textSecondary.withValues(alpha: 0.7),
+                fontSize: 14,
               ),
             ),
           ],

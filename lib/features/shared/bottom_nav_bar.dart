@@ -32,6 +32,11 @@ class BottomNavBar extends StatelessWidget {
           label: 'Directorio',
         ),
         BottomNavigationBarItem(
+          icon: Icon(Icons.favorite_border_rounded),
+          activeIcon: Icon(Icons.favorite_rounded),
+          label: 'Favoritos',
+        ),
+        BottomNavigationBarItem(
           icon: Icon(Icons.search_outlined),
           activeIcon: Icon(Icons.search),
           label: 'Buscar',

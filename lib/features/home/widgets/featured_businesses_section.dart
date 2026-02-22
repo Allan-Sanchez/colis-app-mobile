@@ -22,7 +22,7 @@ class FeaturedBusinessesSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                AppStrings.featuredBusinesses,
+                'Negocios Destacados',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -32,7 +32,7 @@ class FeaturedBusinessesSection extends StatelessWidget {
               GestureDetector(
                 onTap: () => context.go('/directory'),
                 child: const Text(
-                  AppStrings.viewAll,
+                  'Ver todos',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -43,17 +43,18 @@ class FeaturedBusinessesSection extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 12),
-        ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          itemCount: businesses.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 12),
-          itemBuilder: (context, index) {
-            final business = businesses[index];
-            return _BusinessCard(business: business);
-          },
+        const SizedBox(height: 14),
+        SizedBox(
+          height: 180,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            itemCount: businesses.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (context, index) {
+              return _BusinessCard(business: businesses[index]);
+            },
+          ),
         ),
       ],
     );
@@ -70,79 +71,103 @@ class _BusinessCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => context.push('/directory/business/${business.id}'),
       child: Container(
+        width: 160,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: AppColors.surface,
-          border: Border.all(color: AppColors.border),
-        ),
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12),
-                bottomLeft: Radius.circular(12),
-              ),
-              child: SizedBox(
-                width: 100,
-                height: 90,
-                child: business.imageUrl != null
-                    ? CachedNetworkImage(
-                        imageUrl: business.imageUrl!,
-                        fit: BoxFit.cover,
-                        placeholder: (_, __) => Container(
-                          color: AppColors.background,
-                          child: const Icon(Icons.store, color: AppColors.textSecondary),
-                        ),
-                        errorWidget: (_, __, ___) => Container(
-                          color: AppColors.background,
-                          child: const Icon(Icons.store, color: AppColors.textSecondary),
-                        ),
-                      )
-                    : Container(
-                        color: AppColors.background,
-                        child: const Icon(Icons.store, color: AppColors.textSecondary),
-                      ),
-              ),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFFE2E8F0)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      business.name,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+          ],
+        ),
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Circular avatar
+            Stack(
+              children: [
+                Container(
+                  width: 64,
+                  height: 64,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.background,
+                    border: Border.all(
+                        color: const Color(0xFFE2E8F0), width: 1),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: business.imageUrl != null
+                      ? CachedNetworkImage(
+                          imageUrl: business.imageUrl!,
+                          fit: BoxFit.cover,
+                          placeholder: (_, __) =>
+                              const Icon(Icons.store, color: AppColors.textSecondary, size: 28),
+                          errorWidget: (_, __, ___) =>
+                              const Icon(Icons.store, color: AppColors.textSecondary, size: 28),
+                        )
+                      : const Icon(Icons.store,
+                          color: AppColors.textSecondary, size: 28),
+                ),
+                if (business.isFeatured)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(6),
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    if (business.description != null) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        business.description!,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: AppColors.textSecondary,
+                      child: const Text(
+                        'TOP',
+                        style: TextStyle(
+                          fontSize: 8,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.primary,
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ],
-                  ],
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Text(
+              business.name,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimary,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+            ),
+            if (business.description != null) ...[
+              const SizedBox(height: 4),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  business.description!,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(right: 12),
-              child: Icon(
-                Icons.chevron_right,
-                color: AppColors.textSecondary,
-              ),
-            ),
+            ],
           ],
         ),
       ),

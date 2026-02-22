@@ -18,4 +18,5 @@ class ApiConstants {
   static const String menuItems = '$apiPrefix/menu-items';
   static const String config = '$apiPrefix/config';
   static const String health = '$apiPrefix/health';
+  static const String orders = '$apiPrefix/orders';
 }

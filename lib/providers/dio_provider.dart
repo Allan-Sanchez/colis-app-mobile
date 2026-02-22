@@ -4,6 +4,7 @@ import '../repositories/restaurant_repository.dart';
 import '../repositories/directory_repository.dart';
 import '../repositories/menu_repository.dart';
 import '../repositories/search_repository.dart';
+import '../repositories/order_repository.dart';
 
 final dioClientProvider = Provider<DioClient>((ref) {
   return DioClient();
@@ -23,4 +24,8 @@ final menuRepositoryProvider = Provider<MenuRepository>((ref) {
 
 final searchRepositoryProvider = Provider<SearchRepository>((ref) {
   return SearchRepository(ref.read(dioClientProvider).dio);
+});
+
+final orderRepositoryProvider = Provider<OrderRepository>((ref) {
+  return OrderRepository(ref.read(dioClientProvider).dio);
 });
