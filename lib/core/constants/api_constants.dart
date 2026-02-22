@@ -1,7 +1,7 @@
 class ApiConstants {
   ApiConstants._();
 
-  static const String baseUrl = 'http://10.0.2.2:3000';
+  static const String baseUrl = 'https://us-central1-colis-app-72dfa.cloudfunctions.net';
   static const String apiPrefix = '/api';
 
   // Endpoints
@@ -19,4 +19,5 @@ class ApiConstants {
   static const String config = '$apiPrefix/config';
   static const String health = '$apiPrefix/health';
   static const String orders = '$apiPrefix/orders';
+  static const String deviceTokens = '$apiPrefix/device-tokens';
 }
