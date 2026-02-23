@@ -12,15 +12,23 @@ import 'providers/favorites_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Firebase init
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // Firebase init — no-fatal: si firebase_options.dart es el stub
+  // (flutterfire configure aún no ejecutado), el app sigue funcionando.
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
-  // FCM: solicitar permiso y registrar token
-  final messaging = FirebaseMessaging.instance;
-  await messaging.requestPermission();
-  final fcmToken = await messaging.getToken();
-  if (fcmToken != null) {
-    _registerDeviceToken(fcmToken);
+    // FCM: solicitar permiso y registrar token
+    final messaging = FirebaseMessaging.instance;
+    await messaging.requestPermission();
+    final fcmToken = await messaging.getToken();
+    if (fcmToken != null) {
+      _registerDeviceToken(fcmToken);
+    }
+  } catch (_) {
+    // Firebase no configurado todavía — ejecutar: flutterfire configure
+    debugPrint('[Firebase] Inicialización omitida. Ejecutar flutterfire configure.');
   }
 
   final prefs = await SharedPreferences.getInstance();
