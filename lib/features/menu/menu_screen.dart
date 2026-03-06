@@ -9,6 +9,16 @@ import '../../models/menu_category.dart';
 import 'widgets/menu_item_card.dart';
 import '../shared/widgets/cart_fab.dart';
 
+String _normalize(String input) {
+  const accented =    'áàäâãéèëêíìïîóòöôõúùüûñçÁÀÄÂÃÉÈËÊÍÌÏÎÓÒÖÔÕÚÙÜÛÑÇ';
+  const unaccented = 'aaaaaeeeeiiiioooooouuuuncaaaaaeeeeiiiioooooouuuunc';
+  final lower = input.toLowerCase();
+  return lower.split('').map((ch) {
+    final idx = accented.indexOf(ch);
+    return idx != -1 ? unaccented[idx] : ch;
+  }).join();
+}
+
 class MenuScreen extends ConsumerStatefulWidget {
   final int restaurantId;
 
@@ -241,9 +251,9 @@ class _MenuItemsList extends ConsumerWidget {
       data: (items) {
         var filtered = items;
         if (searchQuery.isNotEmpty) {
+          final queryNorm = _normalize(searchQuery);
           filtered = items
-              .where((i) =>
-                  i.title.toLowerCase().contains(searchQuery.toLowerCase()))
+              .where((i) => _normalize(i.title).contains(queryNorm))
               .toList();
         }
 
@@ -375,9 +385,9 @@ class _MenuSearchDelegate extends SearchDelegate<String> {
         final itemsAsync = ref.read(itemsByCategoryProvider(category.id));
         return itemsAsync.whenOrNull(
               data: (items) {
+                final queryNorm = _normalize(query);
                 final filtered = items
-                    .where((i) =>
-                        i.title.toLowerCase().contains(query.toLowerCase()))
+                    .where((i) => _normalize(i.title).contains(queryNorm))
                     .toList();
                 if (filtered.isEmpty) return const SizedBox.shrink();
                 return Column(

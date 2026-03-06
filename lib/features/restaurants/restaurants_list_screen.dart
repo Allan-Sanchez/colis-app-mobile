@@ -166,7 +166,9 @@ class _RestaurantsListScreenState
           data: (restaurants) {
             var filtered = restaurants;
             if (_selectedFilter == 1) {
-              filtered = restaurants.where((r) => r.isFeatured).toList();
+              filtered = restaurants
+                  .where((r) => r.planTier == 'standard' || r.planTier == 'premium')
+                  .toList();
             }
             if (_searchQuery.isNotEmpty) {
               filtered = filtered

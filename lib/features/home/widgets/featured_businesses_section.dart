@@ -113,23 +113,39 @@ class _BusinessCard extends StatelessWidget {
                       : const Icon(Icons.store,
                           color: AppColors.textSecondary, size: 28),
                 ),
-                if (business.isFeatured)
+                if (business.planTier == 'standard' || business.planTier == 'premium')
                   Positioned(
                     top: 0,
                     right: 0,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(6),
+                        color: business.planTier == 'premium'
+                            ? const Color(0xFFF59E0B)
+                            : AppColors.primary,
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Text(
-                        'TOP',
-                        style: TextStyle(
-                          fontSize: 8,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.primary,
-                        ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            business.planTier == 'premium'
+                                ? Icons.workspace_premium_rounded
+                                : Icons.star_rounded,
+                            color: Colors.white,
+                            size: 9,
+                          ),
+                          const SizedBox(width: 2),
+                          Text(
+                            business.planTier == 'premium' ? 'PREMIUM' : 'TOP',
+                            style: const TextStyle(
+                              fontSize: 8,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                              letterSpacing: 0.3,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

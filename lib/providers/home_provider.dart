@@ -23,8 +23,8 @@ final homeDataProvider = FutureProvider<HomeData>((ref) async {
   final profiles = await ref.watch(directoryProfilesProvider.future);
 
   return HomeData(
-    featuredRestaurants: restaurants.where((r) => r.isFeatured).toList(),
+    featuredRestaurants: restaurants.where((r) => r.planTier == 'standard' || r.planTier == 'premium').toList(),
     categories: categories,
-    featuredBusinesses: profiles.where((p) => p.isFeatured).toList(),
+    featuredBusinesses: profiles.where((p) => p.planTier == 'standard' || p.planTier == 'premium').toList(),
   );
 });

@@ -5,9 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/constants/app_constants.dart';
 import '../../providers/restaurant_provider.dart';
-import '../../models/restaurant_social.dart';
 import '../shared/widgets/location_map_widget.dart';
 import '../shared/widgets/favorite_button.dart';
+import '../shared/widgets/social_tile.dart';
+import '../shared/widgets/upgrade_plan_modal.dart';
 
 class RestaurantDetailScreen extends ConsumerWidget {
   final int restaurantId;
@@ -89,23 +90,67 @@ class RestaurantDetailScreen extends ConsumerWidget {
                           const SizedBox(height: 20),
                           // Description (if both exist)
                           const SizedBox(height: 4),
-                          // Social icons
+                          // Social links
                           socialsAsync.when(
                             loading: () => const SizedBox.shrink(),
                             error: (_, __) => const SizedBox.shrink(),
                             data: (socials) {
-                              if (socials.isEmpty) {
+                              final filtered = socials
+                                  .where((s) =>
+                                      s.platform.toLowerCase() != 'whatsapp')
+                                  .toList();
+                              if (filtered.isEmpty) {
                                 return const SizedBox.shrink();
                               }
-                              return Wrap(
-                                spacing: 12,
-                                children: socials
-                                    .map((s) => _SocialIconButton(social: s))
-                                    .toList(),
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 8),
+                                  const _SectionTitle(
+                                    icon: Icons.share_rounded,
+                                    label: 'Redes Sociales',
+                                  ),
+                                  const SizedBox(height: 12),
+                                  ...filtered.map((s) => Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 10),
+                                        child: SocialTile(
+                                          platform: s.platform,
+                                          url: s.url,
+                                        ),
+                                      )),
+                                ],
                               );
                             },
                           ),
                           const SizedBox(height: 28),
+                          // Upgrade plan CTA (solo si es free)
+                          if (restaurant.planTier == 'free') ...[
+                            const SizedBox(height: 8),
+                            SizedBox(
+                              width: double.infinity,
+                              child: OutlinedButton.icon(
+                                onPressed: () => showUpgradePlanModal(
+                                  context,
+                                  entityId: restaurant.id,
+                                  entityName: restaurant.name,
+                                  entityType: 'restaurant',
+                                  currentPlanTier: restaurant.planTier,
+                                ),
+                                icon: const Icon(Icons.star_rounded, color: Color(0xFFF59E0B), size: 18),
+                                label: const Text(
+                                  'Mejorar Visibilidad',
+                                  style: TextStyle(color: Color(0xFFF59E0B), fontWeight: FontWeight.w700),
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(vertical: 14),
+                                  side: const BorderSide(color: Color(0xFFF59E0B)),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                          ],
                           // Ver Menú CTA
                           SizedBox(
                             width: double.infinity,
@@ -130,6 +175,63 @@ class RestaurantDetailScreen extends ConsumerWidget {
                               ),
                             ),
                           ),
+                          // Servicios (delivery, dine-in, takeout)
+                          if (restaurant.hasDelivery || restaurant.hasDineIn || restaurant.hasTakeout) ...[
+                            const SizedBox(height: 28),
+                            const _SectionTitle(
+                              icon: Icons.room_service_rounded,
+                              label: 'Servicios',
+                            ),
+                            const SizedBox(height: 12),
+                            _ChipRow(chips: [
+                              if (restaurant.hasDelivery)
+                                const _ServiceChip(
+                                  icon: Icons.delivery_dining_rounded,
+                                  label: 'A domicilio',
+                                ),
+                              if (restaurant.hasDineIn)
+                                const _ServiceChip(
+                                  icon: Icons.restaurant_rounded,
+                                  label: 'En local',
+                                ),
+                              if (restaurant.hasTakeout)
+                                const _ServiceChip(
+                                  icon: Icons.takeout_dining_rounded,
+                                  label: 'Para llevar',
+                                ),
+                            ]),
+                          ],
+                          // Rango de precios
+                          if (restaurant.priceRange != null) ...[
+                            const SizedBox(height: 24),
+                            _InfoRow(
+                              icon: Icons.attach_money_rounded,
+                              label: 'Rango de precios',
+                              value: restaurant.priceRange!
+                                  .replaceAll('\$', 'Q'),
+                            ),
+                          ],
+                          // Horario
+                          if (restaurant.openingHours != null) ...[
+                            const SizedBox(height: 16),
+                            _InfoRow(
+                              icon: Icons.schedule_rounded,
+                              label: 'Horario',
+                              value: restaurant.openingHours!,
+                            ),
+                          ],
+                          // Etiquetas
+                          if (restaurant.tags != null && restaurant.tags!.isNotEmpty) ...[
+                            const SizedBox(height: 24),
+                            const _SectionTitle(
+                              icon: Icons.label_rounded,
+                              label: 'Etiquetas',
+                            ),
+                            const SizedBox(height: 12),
+                            _ChipRow(chips: restaurant.tags!
+                                .map((t) => _LabelChip(label: t))
+                                .toList()),
+                          ],
                           // Locations section
                           locationsAsync.when(
                             loading: () => const SizedBox.shrink(),
@@ -297,55 +399,28 @@ class _HeroSection extends StatelessWidget {
   }
 }
 
-class _SocialIconButton extends StatelessWidget {
-  final RestaurantSocial social;
+class _SectionTitle extends StatelessWidget {
+  final IconData icon;
+  final String label;
 
-  const _SocialIconButton({required this.social});
+  const _SectionTitle({required this.icon, required this.label});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () async {
-        final uri = Uri.parse(social.url);
-        if (await canLaunchUrl(uri)) {
-          await launchUrl(uri, mode: LaunchMode.externalApplication);
-        }
-      },
-      child: Container(
-        width: 42,
-        height: 42,
-        decoration: BoxDecoration(
-          color: const Color(0xFFF1F5F9),
-          shape: BoxShape.circle,
+    return Row(
+      children: [
+        Icon(icon, color: AppColors.primary, size: 20),
+        const SizedBox(width: 8),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+          ),
         ),
-        child: Icon(
-          _getIcon(social.platform),
-          size: 20,
-          color: const Color(0xFF475569),
-        ),
-      ),
+      ],
     );
-  }
-
-  IconData _getIcon(String platform) {
-    switch (platform.toLowerCase()) {
-      case 'facebook':
-        return Icons.facebook_rounded;
-      case 'instagram':
-        return Icons.camera_alt_rounded;
-      case 'whatsapp':
-        return Icons.chat_rounded;
-      case 'twitter':
-      case 'x':
-        return Icons.alternate_email_rounded;
-      case 'tiktok':
-        return Icons.music_note_rounded;
-      case 'website':
-      case 'web':
-        return Icons.language_rounded;
-      default:
-        return Icons.link_rounded;
-    }
   }
 }
 
@@ -379,6 +454,140 @@ class _WhatsAppFab extends StatelessWidget {
           ],
         ),
         child: const Icon(Icons.chat_rounded, color: Colors.white, size: 28),
+      ),
+    );
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const _InfoRow({required this.icon, required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: AppColors.primary, size: 20),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ChipRow extends StatelessWidget {
+  final List<Widget> chips;
+
+  const _ChipRow({required this.chips});
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: chips,
+    );
+  }
+}
+
+class _ServiceChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+
+  const _ServiceChip({required this.icon, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: AppColors.primary, size: 16),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: AppColors.primary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LabelChip extends StatelessWidget {
+  final String label;
+
+  const _LabelChip({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF1F5F9),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+          color: AppColors.textSecondary,
+        ),
       ),
     );
   }

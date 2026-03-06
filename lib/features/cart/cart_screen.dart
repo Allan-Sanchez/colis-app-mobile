@@ -144,7 +144,7 @@ class _CartBottomBar extends StatelessWidget {
                 ),
               ),
               Text(
-                '\$${cartState.totalFormatted}',
+                'Q${cartState.totalFormatted}',
                 style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w800,

@@ -7,6 +7,8 @@ import '../../core/constants/app_constants.dart';
 import '../../providers/directory_provider.dart';
 import '../shared/widgets/location_map_widget.dart';
 import '../shared/widgets/favorite_button.dart';
+import '../shared/widgets/social_tile.dart';
+import '../shared/widgets/upgrade_plan_modal.dart';
 
 class BusinessDetailScreen extends ConsumerWidget {
   final int profileId;
@@ -55,40 +57,8 @@ class BusinessDetailScreen extends ConsumerWidget {
                   description: profile.description,
                   profileId: profileId,
                 ),
-                // Socials
-                socialsAsync.when(
-                  loading: () => const SizedBox.shrink(),
-                  error: (_, __) => const SizedBox.shrink(),
-                  data: (socials) {
-                    if (socials.isEmpty) return const SizedBox.shrink();
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: Wrap(
-                        spacing: 12,
-                        children: socials.map((social) {
-                          return GestureDetector(
-                            onTap: () => _launchUrl(social.url),
-                            child: Container(
-                              width: 42,
-                              height: 42,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFF1F5F9),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                _socialIcon(social.platform),
-                                size: 20,
-                                color: AppColors.primary,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    );
-                  },
-                ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -105,8 +75,12 @@ class BusinessDetailScreen extends ConsumerWidget {
                                 icon: Icons.phone_rounded,
                                 label: 'Llámanos',
                                 value: c.phoneNumber!,
-                                onTap: () =>
-                                    _launchUrl('tel:${c.phoneNumber}'),
+                                onTap: () async {
+                                  final uri = Uri.parse('tel:${c.phoneNumber}');
+                                  if (await canLaunchUrl(uri)) {
+                                    await launchUrl(uri);
+                                  }
+                                },
                               ));
                             }
                             if (c.email != null) {
@@ -114,8 +88,12 @@ class BusinessDetailScreen extends ConsumerWidget {
                                 icon: Icons.mail_rounded,
                                 label: 'Email',
                                 value: c.email!,
-                                onTap: () =>
-                                    _launchUrl('mailto:${c.email}'),
+                                onTap: () async {
+                                  final uri = Uri.parse('mailto:${c.email}');
+                                  if (await canLaunchUrl(uri)) {
+                                    await launchUrl(uri);
+                                  }
+                                },
                               ));
                             }
                           }
@@ -137,6 +115,54 @@ class BusinessDetailScreen extends ConsumerWidget {
                           );
                         },
                       ),
+                      // Owner + Hours + Payments + Tags
+                      if (profile.ownerName != null ||
+                          profile.openingHours != null ||
+                          (profile.acceptedPayments != null && profile.acceptedPayments!.isNotEmpty) ||
+                          (profile.tags != null && profile.tags!.isNotEmpty)) ...[
+                        // Owner
+                        if (profile.ownerName != null) ...[
+                          _InfoRow(
+                            icon: Icons.person_rounded,
+                            label: 'Propietario',
+                            value: profile.ownerName!,
+                          ),
+                          const SizedBox(height: 12),
+                        ],
+                        // Hours
+                        if (profile.openingHours != null) ...[
+                          _InfoRow(
+                            icon: Icons.schedule_rounded,
+                            label: 'Horario',
+                            value: profile.openingHours!,
+                          ),
+                          const SizedBox(height: 12),
+                        ],
+                        // Accepted payments
+                        if (profile.acceptedPayments != null && profile.acceptedPayments!.isNotEmpty) ...[
+                          _SectionTitle(
+                            icon: Icons.payment_rounded,
+                            label: 'Formas de pago',
+                          ),
+                          const SizedBox(height: 10),
+                          _ChipRow(chips: profile.acceptedPayments!
+                              .map((p) => _LabelChip(label: p))
+                              .toList()),
+                          const SizedBox(height: 20),
+                        ],
+                        // Tags
+                        if (profile.tags != null && profile.tags!.isNotEmpty) ...[
+                          _SectionTitle(
+                            icon: Icons.label_rounded,
+                            label: 'Etiquetas',
+                          ),
+                          const SizedBox(height: 10),
+                          _ChipRow(chips: profile.tags!
+                              .map((t) => _LabelChip(label: t))
+                              .toList()),
+                          const SizedBox(height: 24),
+                        ],
+                      ],
                       // Location section
                       locationsAsync.when(
                         loading: () => const SizedBox.shrink(),
@@ -163,6 +189,59 @@ class BusinessDetailScreen extends ConsumerWidget {
                           );
                         },
                       ),
+                      // Socials section
+                      socialsAsync.when(
+                        loading: () => const SizedBox.shrink(),
+                        error: (_, __) => const SizedBox.shrink(),
+                        data: (socials) {
+                          if (socials.isEmpty) return const SizedBox.shrink();
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _SectionTitle(
+                                icon: Icons.share_rounded,
+                                label: 'Redes Sociales',
+                              ),
+                              const SizedBox(height: 12),
+                              ...socials.map((s) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 10),
+                                    child: SocialTile(
+                                      platform: s.platform,
+                                      url: s.url,
+                                    ),
+                                  )),
+                              const SizedBox(height: 24),
+                            ],
+                          );
+                        },
+                      ),
+                      // Upgrade plan CTA (solo si es free)
+                      if (profile.planTier == 'free') ...[
+                        const SizedBox(height: 4),
+                        SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton.icon(
+                            onPressed: () => showUpgradePlanModal(
+                              context,
+                              entityId: profile.id,
+                              entityName: profile.name,
+                              entityType: 'directory_profile',
+                              currentPlanTier: profile.planTier,
+                            ),
+                            icon: const Icon(Icons.star_rounded, color: Color(0xFFF59E0B), size: 18),
+                            label: const Text(
+                              'Mejorar Visibilidad',
+                              style: TextStyle(color: Color(0xFFF59E0B), fontWeight: FontWeight.w700),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              side: const BorderSide(color: Color(0xFFF59E0B)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
                       // Verified banner
                       Container(
                         padding: const EdgeInsets.all(16),
@@ -215,31 +294,6 @@ class BusinessDetailScreen extends ConsumerWidget {
     );
   }
 
-  IconData _socialIcon(String platform) {
-    switch (platform.toLowerCase()) {
-      case 'facebook':
-        return Icons.facebook_rounded;
-      case 'instagram':
-        return Icons.camera_alt_rounded;
-      case 'whatsapp':
-        return Icons.chat_rounded;
-      case 'twitter':
-      case 'x':
-        return Icons.alternate_email_rounded;
-      case 'website':
-      case 'web':
-        return Icons.language_rounded;
-      default:
-        return Icons.link_rounded;
-    }
-  }
-
-  Future<void> _launchUrl(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
-  }
 }
 
 class _CoverSection extends StatelessWidget {
@@ -432,6 +486,106 @@ class _SectionTitle extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const _InfoRow({required this.icon, required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: AppColors.primary, size: 20),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ChipRow extends StatelessWidget {
+  final List<Widget> chips;
+
+  const _ChipRow({required this.chips});
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: chips,
+    );
+  }
+}
+
+class _LabelChip extends StatelessWidget {
+  final String label;
+
+  const _LabelChip({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF1F5F9),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+          color: AppColors.textSecondary,
+        ),
+      ),
     );
   }
 }

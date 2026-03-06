@@ -23,7 +23,7 @@ final directoryProfilesProvider =
 final featuredProfilesProvider =
     Provider<AsyncValue<List<DirectoryProfile>>>((ref) {
   return ref.watch(directoryProfilesProvider).whenData(
-        (profiles) => profiles.where((p) => p.isFeatured).toList(),
+        (profiles) => profiles.where((p) => p.planTier == 'standard' || p.planTier == 'premium').toList(),
       );
 });
 

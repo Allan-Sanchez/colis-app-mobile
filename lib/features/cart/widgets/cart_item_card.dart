@@ -60,7 +60,7 @@ class CartItemCard extends ConsumerWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '\$${price.toStringAsFixed(2)} c/u',
+                  'Q${price.toStringAsFixed(2)} c/u',
                   style: const TextStyle(
                     fontSize: 12,
                     color: AppColors.textSecondary,
@@ -75,7 +75,7 @@ class CartItemCard extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '\$${cartItem.subtotal.toStringAsFixed(2)}',
+                'Q${cartItem.subtotal.toStringAsFixed(2)}',
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,

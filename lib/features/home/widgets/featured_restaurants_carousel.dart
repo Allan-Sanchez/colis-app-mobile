@@ -201,8 +201,8 @@ class _RestaurantCarouselCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // Destacado badge
-                  if (restaurant.isFeatured)
+                  // Badge según planTier
+                  if (restaurant.planTier == 'premium' || restaurant.planTier == 'standard')
                     Positioned(
                       top: 10,
                       right: 10,
@@ -210,18 +210,25 @@ class _RestaurantCarouselCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: AppColors.primary,
+                          color: restaurant.planTier == 'premium'
+                              ? const Color(0xFFF59E0B)
+                              : AppColors.primary,
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.star_rounded,
-                                color: Colors.white, size: 12),
-                            SizedBox(width: 3),
+                            Icon(
+                              restaurant.planTier == 'premium'
+                                  ? Icons.workspace_premium_rounded
+                                  : Icons.star_rounded,
+                              color: Colors.white,
+                              size: 12,
+                            ),
+                            const SizedBox(width: 3),
                             Text(
-                              'DESTACADO',
-                              style: TextStyle(
+                              restaurant.planTier == 'premium' ? 'PREMIUM' : 'DESTACADO',
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 10,
                                 fontWeight: FontWeight.w700,

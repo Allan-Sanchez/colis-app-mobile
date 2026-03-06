@@ -6,6 +6,10 @@ import '../../core/constants/app_constants.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/restaurant_provider.dart';
 import '../../providers/dio_provider.dart';
+import '../../providers/favorites_provider.dart';
+
+const _kCustomerName = 'order_customer_name';
+const _kCustomerPhone = 'order_customer_phone';
 
 class OrderSummaryScreen extends ConsumerStatefulWidget {
   const OrderSummaryScreen({super.key});
@@ -22,6 +26,16 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+    final prefs = ref.read(sharedPreferencesProvider);
+    final savedName = prefs.getString(_kCustomerName);
+    final savedPhone = prefs.getString(_kCustomerPhone);
+    if (savedName != null) _nameController.text = savedName;
+    if (savedPhone != null) _phoneController.text = savedPhone;
+  }
+
+  @override
   void dispose() {
     _nameController.dispose();
     _phoneController.dispose();
@@ -35,7 +49,13 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
     final cartState = ref.read(cartProvider);
     if (cartState.restaurantId == null) return;
 
+    FocusScope.of(context).unfocus();
     setState(() => _isLoading = true);
+
+    // Persistir nombre y teléfono para la próxima vez
+    final prefs = ref.read(sharedPreferencesProvider);
+    await prefs.setString(_kCustomerName, _nameController.text.trim());
+    await prefs.setString(_kCustomerPhone, _phoneController.text.trim());
 
     try {
       // 1. Guardar orden en el backend
@@ -125,7 +145,7 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
     }
 
     buffer.writeln();
-    buffer.writeln('💰 *Total: \$${cartState.totalFormatted}*');
+    buffer.writeln('💰 *Total: Q${cartState.totalFormatted}*');
     buffer.writeln();
     buffer.writeln('👤 Nombre: $customerName');
     buffer.writeln('📱 Teléfono: $customerPhone');
@@ -172,7 +192,10 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        behavior: HitTestBehavior.translucent,
+        child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 120),
         child: Form(
           key: _formKey,
@@ -205,7 +228,7 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
                                 ),
                               ),
                               Text(
-                                '\$${ci.subtotal.toStringAsFixed(2)}',
+                                'Q${ci.subtotal.toStringAsFixed(2)}',
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
@@ -227,7 +250,7 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
                           ),
                         ),
                         Text(
-                          '\$${cartState.totalFormatted}',
+                          'Q${cartState.totalFormatted}',
                           style: const TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 18,
@@ -273,6 +296,7 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
             ],
           ),
         ),
+      ),
       ),
       bottomNavigationBar: Container(
         padding: EdgeInsets.fromLTRB(

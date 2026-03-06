@@ -84,7 +84,7 @@ class MenuItemCard extends StatelessWidget {
                     if (item.price != null) ...[
                       const SizedBox(width: 8),
                       Text(
-                        '\$${item.price}',
+                        'Q${item.price}',
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,

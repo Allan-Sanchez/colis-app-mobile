@@ -21,6 +21,7 @@ class LocationMapWidget extends StatefulWidget {
 
 class _LocationMapWidgetState extends State<LocationMapWidget> {
   GoogleMapController? _controller;
+  bool _mapError = false;
 
   double? get _lat => double.tryParse(widget.latitude ?? '');
   double? get _lng => double.tryParse(widget.longitude ?? '');
@@ -30,6 +31,39 @@ class _LocationMapWidgetState extends State<LocationMapWidget> {
   void dispose() {
     _controller?.dispose();
     super.dispose();
+  }
+
+  Widget _buildMap() {
+    try {
+      return GoogleMap(
+        initialCameraPosition: CameraPosition(
+          target: LatLng(_lat!, _lng!),
+          zoom: 15,
+        ),
+        markers: {
+          Marker(
+            markerId: const MarkerId('location'),
+            position: LatLng(_lat!, _lng!),
+            infoWindow: InfoWindow(
+              title: widget.address ?? 'Ubicación',
+            ),
+          ),
+        },
+        onMapCreated: (c) => _controller = c,
+        zoomControlsEnabled: false,
+        myLocationButtonEnabled: false,
+        compassEnabled: false,
+        rotateGesturesEnabled: false,
+        scrollGesturesEnabled: false,
+        tiltGesturesEnabled: false,
+        zoomGesturesEnabled: false,
+      );
+    } catch (_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) setState(() => _mapError = true);
+      });
+      return _MapPlaceholder();
+    }
   }
 
   Future<void> _openInMaps() async {
@@ -70,26 +104,8 @@ class _LocationMapWidgetState extends State<LocationMapWidget> {
           // Mapa o placeholder
           SizedBox(
             height: 160,
-            child: _hasCoords
-                ? GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                      target: LatLng(_lat!, _lng!),
-                      zoom: 15,
-                    ),
-                    markers: {
-                      Marker(
-                        markerId: const MarkerId('location'),
-                        position: LatLng(_lat!, _lng!),
-                        infoWindow: InfoWindow(
-                          title: widget.address ?? 'Ubicación',
-                        ),
-                      ),
-                    },
-                    onMapCreated: (c) => _controller = c,
-                    zoomControlsEnabled: false,
-                    myLocationButtonEnabled: false,
-                    liteModeEnabled: true,
-                  )
+            child: _hasCoords && !_mapError
+                ? _buildMap()
                 : _MapPlaceholder(),
           ),
           // Dirección + botón

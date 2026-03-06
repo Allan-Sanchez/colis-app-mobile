@@ -26,7 +26,15 @@ mixin _$DirectoryProfile {
   String get name => throw _privateConstructorUsedError;
   String? get imageUrl => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
-  bool get isFeatured => throw _privateConstructorUsedError;
+  String get planTier => throw _privateConstructorUsedError;
+  int get planPriority => throw _privateConstructorUsedError;
+  String? get planStartDate => throw _privateConstructorUsedError;
+  String? get planEndDate => throw _privateConstructorUsedError;
+  String? get planNotes => throw _privateConstructorUsedError;
+  String? get openingHours => throw _privateConstructorUsedError;
+  String? get ownerName => throw _privateConstructorUsedError;
+  List<String>? get tags => throw _privateConstructorUsedError;
+  List<String>? get acceptedPayments => throw _privateConstructorUsedError;
   String? get createdAt => throw _privateConstructorUsedError;
   String? get updatedAt => throw _privateConstructorUsedError;
 
@@ -53,7 +61,15 @@ abstract class $DirectoryProfileCopyWith<$Res> {
     String name,
     String? imageUrl,
     String? description,
-    bool isFeatured,
+    String planTier,
+    int planPriority,
+    String? planStartDate,
+    String? planEndDate,
+    String? planNotes,
+    String? openingHours,
+    String? ownerName,
+    List<String>? tags,
+    List<String>? acceptedPayments,
     String? createdAt,
     String? updatedAt,
   });
@@ -79,7 +95,15 @@ class _$DirectoryProfileCopyWithImpl<$Res, $Val extends DirectoryProfile>
     Object? name = null,
     Object? imageUrl = freezed,
     Object? description = freezed,
-    Object? isFeatured = null,
+    Object? planTier = null,
+    Object? planPriority = null,
+    Object? planStartDate = freezed,
+    Object? planEndDate = freezed,
+    Object? planNotes = freezed,
+    Object? openingHours = freezed,
+    Object? ownerName = freezed,
+    Object? tags = freezed,
+    Object? acceptedPayments = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -105,10 +129,42 @@ class _$DirectoryProfileCopyWithImpl<$Res, $Val extends DirectoryProfile>
                 ? _value.description
                 : description // ignore: cast_nullable_to_non_nullable
                       as String?,
-            isFeatured: null == isFeatured
-                ? _value.isFeatured
-                : isFeatured // ignore: cast_nullable_to_non_nullable
-                      as bool,
+            planTier: null == planTier
+                ? _value.planTier
+                : planTier // ignore: cast_nullable_to_non_nullable
+                      as String,
+            planPriority: null == planPriority
+                ? _value.planPriority
+                : planPriority // ignore: cast_nullable_to_non_nullable
+                      as int,
+            planStartDate: freezed == planStartDate
+                ? _value.planStartDate
+                : planStartDate // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            planEndDate: freezed == planEndDate
+                ? _value.planEndDate
+                : planEndDate // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            planNotes: freezed == planNotes
+                ? _value.planNotes
+                : planNotes // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            openingHours: freezed == openingHours
+                ? _value.openingHours
+                : openingHours // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            ownerName: freezed == ownerName
+                ? _value.ownerName
+                : ownerName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            tags: freezed == tags
+                ? _value.tags
+                : tags // ignore: cast_nullable_to_non_nullable
+                      as List<String>?,
+            acceptedPayments: freezed == acceptedPayments
+                ? _value.acceptedPayments
+                : acceptedPayments // ignore: cast_nullable_to_non_nullable
+                      as List<String>?,
             createdAt: freezed == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
@@ -138,7 +194,15 @@ abstract class _$$DirectoryProfileImplCopyWith<$Res>
     String name,
     String? imageUrl,
     String? description,
-    bool isFeatured,
+    String planTier,
+    int planPriority,
+    String? planStartDate,
+    String? planEndDate,
+    String? planNotes,
+    String? openingHours,
+    String? ownerName,
+    List<String>? tags,
+    List<String>? acceptedPayments,
     String? createdAt,
     String? updatedAt,
   });
@@ -163,7 +227,15 @@ class __$$DirectoryProfileImplCopyWithImpl<$Res>
     Object? name = null,
     Object? imageUrl = freezed,
     Object? description = freezed,
-    Object? isFeatured = null,
+    Object? planTier = null,
+    Object? planPriority = null,
+    Object? planStartDate = freezed,
+    Object? planEndDate = freezed,
+    Object? planNotes = freezed,
+    Object? openingHours = freezed,
+    Object? ownerName = freezed,
+    Object? tags = freezed,
+    Object? acceptedPayments = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -189,10 +261,42 @@ class __$$DirectoryProfileImplCopyWithImpl<$Res>
             ? _value.description
             : description // ignore: cast_nullable_to_non_nullable
                   as String?,
-        isFeatured: null == isFeatured
-            ? _value.isFeatured
-            : isFeatured // ignore: cast_nullable_to_non_nullable
-                  as bool,
+        planTier: null == planTier
+            ? _value.planTier
+            : planTier // ignore: cast_nullable_to_non_nullable
+                  as String,
+        planPriority: null == planPriority
+            ? _value.planPriority
+            : planPriority // ignore: cast_nullable_to_non_nullable
+                  as int,
+        planStartDate: freezed == planStartDate
+            ? _value.planStartDate
+            : planStartDate // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        planEndDate: freezed == planEndDate
+            ? _value.planEndDate
+            : planEndDate // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        planNotes: freezed == planNotes
+            ? _value.planNotes
+            : planNotes // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        openingHours: freezed == openingHours
+            ? _value.openingHours
+            : openingHours // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        ownerName: freezed == ownerName
+            ? _value.ownerName
+            : ownerName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        tags: freezed == tags
+            ? _value._tags
+            : tags // ignore: cast_nullable_to_non_nullable
+                  as List<String>?,
+        acceptedPayments: freezed == acceptedPayments
+            ? _value._acceptedPayments
+            : acceptedPayments // ignore: cast_nullable_to_non_nullable
+                  as List<String>?,
         createdAt: freezed == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
@@ -215,10 +319,19 @@ class _$DirectoryProfileImpl implements _DirectoryProfile {
     required this.name,
     this.imageUrl,
     this.description,
-    this.isFeatured = false,
+    this.planTier = 'free',
+    this.planPriority = 1,
+    this.planStartDate,
+    this.planEndDate,
+    this.planNotes,
+    this.openingHours,
+    this.ownerName,
+    final List<String>? tags,
+    final List<String>? acceptedPayments,
     this.createdAt,
     this.updatedAt,
-  });
+  }) : _tags = tags,
+       _acceptedPayments = acceptedPayments;
 
   factory _$DirectoryProfileImpl.fromJson(Map<String, dynamic> json) =>
       _$$DirectoryProfileImplFromJson(json);
@@ -235,7 +348,41 @@ class _$DirectoryProfileImpl implements _DirectoryProfile {
   final String? description;
   @override
   @JsonKey()
-  final bool isFeatured;
+  final String planTier;
+  @override
+  @JsonKey()
+  final int planPriority;
+  @override
+  final String? planStartDate;
+  @override
+  final String? planEndDate;
+  @override
+  final String? planNotes;
+  @override
+  final String? openingHours;
+  @override
+  final String? ownerName;
+  final List<String>? _tags;
+  @override
+  List<String>? get tags {
+    final value = _tags;
+    if (value == null) return null;
+    if (_tags is EqualUnmodifiableListView) return _tags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<String>? _acceptedPayments;
+  @override
+  List<String>? get acceptedPayments {
+    final value = _acceptedPayments;
+    if (value == null) return null;
+    if (_acceptedPayments is EqualUnmodifiableListView)
+      return _acceptedPayments;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   final String? createdAt;
   @override
@@ -243,7 +390,7 @@ class _$DirectoryProfileImpl implements _DirectoryProfile {
 
   @override
   String toString() {
-    return 'DirectoryProfile(id: $id, categoryId: $categoryId, name: $name, imageUrl: $imageUrl, description: $description, isFeatured: $isFeatured, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'DirectoryProfile(id: $id, categoryId: $categoryId, name: $name, imageUrl: $imageUrl, description: $description, planTier: $planTier, planPriority: $planPriority, planStartDate: $planStartDate, planEndDate: $planEndDate, planNotes: $planNotes, openingHours: $openingHours, ownerName: $ownerName, tags: $tags, acceptedPayments: $acceptedPayments, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -259,8 +406,25 @@ class _$DirectoryProfileImpl implements _DirectoryProfile {
                 other.imageUrl == imageUrl) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            (identical(other.isFeatured, isFeatured) ||
-                other.isFeatured == isFeatured) &&
+            (identical(other.planTier, planTier) ||
+                other.planTier == planTier) &&
+            (identical(other.planPriority, planPriority) ||
+                other.planPriority == planPriority) &&
+            (identical(other.planStartDate, planStartDate) ||
+                other.planStartDate == planStartDate) &&
+            (identical(other.planEndDate, planEndDate) ||
+                other.planEndDate == planEndDate) &&
+            (identical(other.planNotes, planNotes) ||
+                other.planNotes == planNotes) &&
+            (identical(other.openingHours, openingHours) ||
+                other.openingHours == openingHours) &&
+            (identical(other.ownerName, ownerName) ||
+                other.ownerName == ownerName) &&
+            const DeepCollectionEquality().equals(other._tags, _tags) &&
+            const DeepCollectionEquality().equals(
+              other._acceptedPayments,
+              _acceptedPayments,
+            ) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -276,7 +440,15 @@ class _$DirectoryProfileImpl implements _DirectoryProfile {
     name,
     imageUrl,
     description,
-    isFeatured,
+    planTier,
+    planPriority,
+    planStartDate,
+    planEndDate,
+    planNotes,
+    openingHours,
+    ownerName,
+    const DeepCollectionEquality().hash(_tags),
+    const DeepCollectionEquality().hash(_acceptedPayments),
     createdAt,
     updatedAt,
   );
@@ -305,7 +477,15 @@ abstract class _DirectoryProfile implements DirectoryProfile {
     required final String name,
     final String? imageUrl,
     final String? description,
-    final bool isFeatured,
+    final String planTier,
+    final int planPriority,
+    final String? planStartDate,
+    final String? planEndDate,
+    final String? planNotes,
+    final String? openingHours,
+    final String? ownerName,
+    final List<String>? tags,
+    final List<String>? acceptedPayments,
     final String? createdAt,
     final String? updatedAt,
   }) = _$DirectoryProfileImpl;
@@ -324,7 +504,23 @@ abstract class _DirectoryProfile implements DirectoryProfile {
   @override
   String? get description;
   @override
-  bool get isFeatured;
+  String get planTier;
+  @override
+  int get planPriority;
+  @override
+  String? get planStartDate;
+  @override
+  String? get planEndDate;
+  @override
+  String? get planNotes;
+  @override
+  String? get openingHours;
+  @override
+  String? get ownerName;
+  @override
+  List<String>? get tags;
+  @override
+  List<String>? get acceptedPayments;
   @override
   String? get createdAt;
   @override

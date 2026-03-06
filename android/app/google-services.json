@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "850478985075",
+    "project_id": "colis-app-72dfa",
+    "storage_bucket": "colis-app-72dfa.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:850478985075:android:7cfed899fc98c1bf1c1f06",
+        "android_client_info": {
+          "package_name": "com.colis.colis_app_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-cIy90WfDU6yNCCGAo89TGuy2jn4oMKY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

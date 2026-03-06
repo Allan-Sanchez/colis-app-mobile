@@ -61,20 +61,24 @@ class BusinessCard extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        if (business.isFeatured) ...[
+                        if (business.planTier == 'standard' || business.planTier == 'premium') ...[
                           Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
-                              color: AppColors.primary.withValues(alpha: 0.1),
+                              color: business.planTier == 'premium'
+                                  ? const Color(0xFFFEF3C7)
+                                  : AppColors.primary.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(6),
                             ),
-                            child: const Text(
-                              'Destacado',
+                            child: Text(
+                              business.planTier == 'premium' ? 'Premium' : 'Destacado',
                               style: TextStyle(
                                 fontSize: 9,
                                 fontWeight: FontWeight.w700,
-                                color: AppColors.primary,
+                                color: business.planTier == 'premium'
+                                    ? const Color(0xFF92400E)
+                                    : AppColors.primary,
                               ),
                             ),
                           ),

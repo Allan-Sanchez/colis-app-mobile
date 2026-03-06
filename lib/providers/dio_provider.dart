@@ -5,6 +5,7 @@ import '../repositories/directory_repository.dart';
 import '../repositories/menu_repository.dart';
 import '../repositories/search_repository.dart';
 import '../repositories/order_repository.dart';
+import '../repositories/plan_request_repository.dart';
 
 final dioClientProvider = Provider<DioClient>((ref) {
   return DioClient();
@@ -28,4 +29,8 @@ final searchRepositoryProvider = Provider<SearchRepository>((ref) {
 
 final orderRepositoryProvider = Provider<OrderRepository>((ref) {
   return OrderRepository(ref.read(dioClientProvider).dio);
+});
+
+final planRequestRepositoryProvider = Provider<PlanRequestRepository>((ref) {
+  return PlanRequestRepository(ref.read(dioClientProvider).dio);
 });

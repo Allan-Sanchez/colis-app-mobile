@@ -12,7 +12,7 @@ final restaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
 
 final featuredRestaurantsProvider = Provider<AsyncValue<List<Restaurant>>>((ref) {
   return ref.watch(restaurantsProvider).whenData(
-        (restaurants) => restaurants.where((r) => r.isFeatured).toList(),
+        (restaurants) => restaurants.where((r) => r.planTier == 'standard' || r.planTier == 'premium').toList(),
       );
 });
 

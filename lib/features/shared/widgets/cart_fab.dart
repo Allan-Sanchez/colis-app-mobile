@@ -114,7 +114,7 @@ class _CartFabState extends ConsumerState<CartFab>
             ),
             // Total
             Text(
-              '\$${total.toStringAsFixed(2)}',
+              'Q${total.toStringAsFixed(2)}',
               style: const TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w700,

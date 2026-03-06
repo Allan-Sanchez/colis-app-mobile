@@ -25,7 +25,17 @@ mixin _$Restaurant {
   String get name => throw _privateConstructorUsedError;
   String? get imageUrl => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
-  bool get isFeatured => throw _privateConstructorUsedError;
+  String get planTier => throw _privateConstructorUsedError;
+  int get planPriority => throw _privateConstructorUsedError;
+  String? get planStartDate => throw _privateConstructorUsedError;
+  String? get planEndDate => throw _privateConstructorUsedError;
+  String? get planNotes => throw _privateConstructorUsedError;
+  String? get openingHours => throw _privateConstructorUsedError;
+  bool get hasDelivery => throw _privateConstructorUsedError;
+  bool get hasDineIn => throw _privateConstructorUsedError;
+  bool get hasTakeout => throw _privateConstructorUsedError;
+  String? get priceRange => throw _privateConstructorUsedError;
+  List<String>? get tags => throw _privateConstructorUsedError;
   String? get createdAt => throw _privateConstructorUsedError;
   String? get updatedAt => throw _privateConstructorUsedError;
 
@@ -51,7 +61,17 @@ abstract class $RestaurantCopyWith<$Res> {
     String name,
     String? imageUrl,
     String? description,
-    bool isFeatured,
+    String planTier,
+    int planPriority,
+    String? planStartDate,
+    String? planEndDate,
+    String? planNotes,
+    String? openingHours,
+    bool hasDelivery,
+    bool hasDineIn,
+    bool hasTakeout,
+    String? priceRange,
+    List<String>? tags,
     String? createdAt,
     String? updatedAt,
   });
@@ -76,7 +96,17 @@ class _$RestaurantCopyWithImpl<$Res, $Val extends Restaurant>
     Object? name = null,
     Object? imageUrl = freezed,
     Object? description = freezed,
-    Object? isFeatured = null,
+    Object? planTier = null,
+    Object? planPriority = null,
+    Object? planStartDate = freezed,
+    Object? planEndDate = freezed,
+    Object? planNotes = freezed,
+    Object? openingHours = freezed,
+    Object? hasDelivery = null,
+    Object? hasDineIn = null,
+    Object? hasTakeout = null,
+    Object? priceRange = freezed,
+    Object? tags = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -98,10 +128,50 @@ class _$RestaurantCopyWithImpl<$Res, $Val extends Restaurant>
                 ? _value.description
                 : description // ignore: cast_nullable_to_non_nullable
                       as String?,
-            isFeatured: null == isFeatured
-                ? _value.isFeatured
-                : isFeatured // ignore: cast_nullable_to_non_nullable
+            planTier: null == planTier
+                ? _value.planTier
+                : planTier // ignore: cast_nullable_to_non_nullable
+                      as String,
+            planPriority: null == planPriority
+                ? _value.planPriority
+                : planPriority // ignore: cast_nullable_to_non_nullable
+                      as int,
+            planStartDate: freezed == planStartDate
+                ? _value.planStartDate
+                : planStartDate // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            planEndDate: freezed == planEndDate
+                ? _value.planEndDate
+                : planEndDate // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            planNotes: freezed == planNotes
+                ? _value.planNotes
+                : planNotes // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            openingHours: freezed == openingHours
+                ? _value.openingHours
+                : openingHours // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            hasDelivery: null == hasDelivery
+                ? _value.hasDelivery
+                : hasDelivery // ignore: cast_nullable_to_non_nullable
                       as bool,
+            hasDineIn: null == hasDineIn
+                ? _value.hasDineIn
+                : hasDineIn // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            hasTakeout: null == hasTakeout
+                ? _value.hasTakeout
+                : hasTakeout // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            priceRange: freezed == priceRange
+                ? _value.priceRange
+                : priceRange // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            tags: freezed == tags
+                ? _value.tags
+                : tags // ignore: cast_nullable_to_non_nullable
+                      as List<String>?,
             createdAt: freezed == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
@@ -130,7 +200,17 @@ abstract class _$$RestaurantImplCopyWith<$Res>
     String name,
     String? imageUrl,
     String? description,
-    bool isFeatured,
+    String planTier,
+    int planPriority,
+    String? planStartDate,
+    String? planEndDate,
+    String? planNotes,
+    String? openingHours,
+    bool hasDelivery,
+    bool hasDineIn,
+    bool hasTakeout,
+    String? priceRange,
+    List<String>? tags,
     String? createdAt,
     String? updatedAt,
   });
@@ -154,7 +234,17 @@ class __$$RestaurantImplCopyWithImpl<$Res>
     Object? name = null,
     Object? imageUrl = freezed,
     Object? description = freezed,
-    Object? isFeatured = null,
+    Object? planTier = null,
+    Object? planPriority = null,
+    Object? planStartDate = freezed,
+    Object? planEndDate = freezed,
+    Object? planNotes = freezed,
+    Object? openingHours = freezed,
+    Object? hasDelivery = null,
+    Object? hasDineIn = null,
+    Object? hasTakeout = null,
+    Object? priceRange = freezed,
+    Object? tags = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -176,10 +266,50 @@ class __$$RestaurantImplCopyWithImpl<$Res>
             ? _value.description
             : description // ignore: cast_nullable_to_non_nullable
                   as String?,
-        isFeatured: null == isFeatured
-            ? _value.isFeatured
-            : isFeatured // ignore: cast_nullable_to_non_nullable
+        planTier: null == planTier
+            ? _value.planTier
+            : planTier // ignore: cast_nullable_to_non_nullable
+                  as String,
+        planPriority: null == planPriority
+            ? _value.planPriority
+            : planPriority // ignore: cast_nullable_to_non_nullable
+                  as int,
+        planStartDate: freezed == planStartDate
+            ? _value.planStartDate
+            : planStartDate // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        planEndDate: freezed == planEndDate
+            ? _value.planEndDate
+            : planEndDate // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        planNotes: freezed == planNotes
+            ? _value.planNotes
+            : planNotes // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        openingHours: freezed == openingHours
+            ? _value.openingHours
+            : openingHours // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        hasDelivery: null == hasDelivery
+            ? _value.hasDelivery
+            : hasDelivery // ignore: cast_nullable_to_non_nullable
                   as bool,
+        hasDineIn: null == hasDineIn
+            ? _value.hasDineIn
+            : hasDineIn // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        hasTakeout: null == hasTakeout
+            ? _value.hasTakeout
+            : hasTakeout // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        priceRange: freezed == priceRange
+            ? _value.priceRange
+            : priceRange // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        tags: freezed == tags
+            ? _value._tags
+            : tags // ignore: cast_nullable_to_non_nullable
+                  as List<String>?,
         createdAt: freezed == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
@@ -201,10 +331,20 @@ class _$RestaurantImpl implements _Restaurant {
     required this.name,
     this.imageUrl,
     this.description,
-    this.isFeatured = false,
+    this.planTier = 'free',
+    this.planPriority = 1,
+    this.planStartDate,
+    this.planEndDate,
+    this.planNotes,
+    this.openingHours,
+    this.hasDelivery = false,
+    this.hasDineIn = true,
+    this.hasTakeout = false,
+    this.priceRange,
+    final List<String>? tags,
     this.createdAt,
     this.updatedAt,
-  });
+  }) : _tags = tags;
 
   factory _$RestaurantImpl.fromJson(Map<String, dynamic> json) =>
       _$$RestaurantImplFromJson(json);
@@ -219,7 +359,39 @@ class _$RestaurantImpl implements _Restaurant {
   final String? description;
   @override
   @JsonKey()
-  final bool isFeatured;
+  final String planTier;
+  @override
+  @JsonKey()
+  final int planPriority;
+  @override
+  final String? planStartDate;
+  @override
+  final String? planEndDate;
+  @override
+  final String? planNotes;
+  @override
+  final String? openingHours;
+  @override
+  @JsonKey()
+  final bool hasDelivery;
+  @override
+  @JsonKey()
+  final bool hasDineIn;
+  @override
+  @JsonKey()
+  final bool hasTakeout;
+  @override
+  final String? priceRange;
+  final List<String>? _tags;
+  @override
+  List<String>? get tags {
+    final value = _tags;
+    if (value == null) return null;
+    if (_tags is EqualUnmodifiableListView) return _tags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   final String? createdAt;
   @override
@@ -227,7 +399,7 @@ class _$RestaurantImpl implements _Restaurant {
 
   @override
   String toString() {
-    return 'Restaurant(id: $id, name: $name, imageUrl: $imageUrl, description: $description, isFeatured: $isFeatured, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Restaurant(id: $id, name: $name, imageUrl: $imageUrl, description: $description, planTier: $planTier, planPriority: $planPriority, planStartDate: $planStartDate, planEndDate: $planEndDate, planNotes: $planNotes, openingHours: $openingHours, hasDelivery: $hasDelivery, hasDineIn: $hasDineIn, hasTakeout: $hasTakeout, priceRange: $priceRange, tags: $tags, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -241,8 +413,27 @@ class _$RestaurantImpl implements _Restaurant {
                 other.imageUrl == imageUrl) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            (identical(other.isFeatured, isFeatured) ||
-                other.isFeatured == isFeatured) &&
+            (identical(other.planTier, planTier) ||
+                other.planTier == planTier) &&
+            (identical(other.planPriority, planPriority) ||
+                other.planPriority == planPriority) &&
+            (identical(other.planStartDate, planStartDate) ||
+                other.planStartDate == planStartDate) &&
+            (identical(other.planEndDate, planEndDate) ||
+                other.planEndDate == planEndDate) &&
+            (identical(other.planNotes, planNotes) ||
+                other.planNotes == planNotes) &&
+            (identical(other.openingHours, openingHours) ||
+                other.openingHours == openingHours) &&
+            (identical(other.hasDelivery, hasDelivery) ||
+                other.hasDelivery == hasDelivery) &&
+            (identical(other.hasDineIn, hasDineIn) ||
+                other.hasDineIn == hasDineIn) &&
+            (identical(other.hasTakeout, hasTakeout) ||
+                other.hasTakeout == hasTakeout) &&
+            (identical(other.priceRange, priceRange) ||
+                other.priceRange == priceRange) &&
+            const DeepCollectionEquality().equals(other._tags, _tags) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -257,7 +448,17 @@ class _$RestaurantImpl implements _Restaurant {
     name,
     imageUrl,
     description,
-    isFeatured,
+    planTier,
+    planPriority,
+    planStartDate,
+    planEndDate,
+    planNotes,
+    openingHours,
+    hasDelivery,
+    hasDineIn,
+    hasTakeout,
+    priceRange,
+    const DeepCollectionEquality().hash(_tags),
     createdAt,
     updatedAt,
   );
@@ -282,7 +483,17 @@ abstract class _Restaurant implements Restaurant {
     required final String name,
     final String? imageUrl,
     final String? description,
-    final bool isFeatured,
+    final String planTier,
+    final int planPriority,
+    final String? planStartDate,
+    final String? planEndDate,
+    final String? planNotes,
+    final String? openingHours,
+    final bool hasDelivery,
+    final bool hasDineIn,
+    final bool hasTakeout,
+    final String? priceRange,
+    final List<String>? tags,
     final String? createdAt,
     final String? updatedAt,
   }) = _$RestaurantImpl;
@@ -299,7 +510,27 @@ abstract class _Restaurant implements Restaurant {
   @override
   String? get description;
   @override
-  bool get isFeatured;
+  String get planTier;
+  @override
+  int get planPriority;
+  @override
+  String? get planStartDate;
+  @override
+  String? get planEndDate;
+  @override
+  String? get planNotes;
+  @override
+  String? get openingHours;
+  @override
+  bool get hasDelivery;
+  @override
+  bool get hasDineIn;
+  @override
+  bool get hasTakeout;
+  @override
+  String? get priceRange;
+  @override
+  List<String>? get tags;
   @override
   String? get createdAt;
   @override
