@@ -1,0 +1,4 @@
+sdk.dir=/path/to/Android/sdk
+# Google Maps API Key — reemplaza con tu clave real
+# Para obtener la clave: Google Cloud Console → Credentials → Maps SDK for Android
+MAPS_API_KEY=YOUR_GOOGLE_MAPS_API_KEY
