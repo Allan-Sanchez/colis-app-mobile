@@ -21,4 +21,5 @@ class ApiConstants {
   static const String orders = '$apiPrefix/orders';
   static const String deviceTokens = '$apiPrefix/device-tokens';
   static const String planRequests = '$apiPrefix/plan-requests';
+  static const String reviews = '$apiPrefix/reviews';
 }

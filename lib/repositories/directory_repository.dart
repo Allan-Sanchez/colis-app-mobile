@@ -30,6 +30,18 @@ class DirectoryRepository {
     );
   }
 
+  Future<ApiResponse<List<DirectoryProfile>>> getFeaturedProfiles({int limit = 10}) async {
+    final response = await _dio.get(
+      ApiConstants.directoryProfiles,
+      queryParameters: {'featured': 'true', 'limit': limit},
+    );
+    return ApiResponse.fromJson(
+      response.data,
+      (json) =>
+          (json as List).map((e) => DirectoryProfile.fromJson(e)).toList(),
+    );
+  }
+
   Future<ApiResponse<DirectoryProfile>> getProfileById(int id) async {
     final response = await _dio.get('${ApiConstants.directoryProfiles}/$id');
     return ApiResponse.fromJson(

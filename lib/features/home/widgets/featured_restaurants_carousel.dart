@@ -63,18 +63,20 @@ class _FeaturedRestaurantsCarouselState
           ),
         ),
         const SizedBox(height: 14),
-        SizedBox(
-          height: 220,
-          child: PageView.builder(
-            controller: _pageController,
-            itemCount: widget.restaurants.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6),
-                child: _RestaurantCarouselCard(
-                    restaurant: widget.restaurants[index]),
-              );
-            },
+        RepaintBoundary(
+          child: SizedBox(
+            height: 220,
+            child: PageView.builder(
+              controller: _pageController,
+              itemCount: widget.restaurants.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  child: _RestaurantCarouselCard(
+                      restaurant: widget.restaurants[index]),
+                );
+              },
+            ),
           ),
         ),
         if (widget.restaurants.length > 1) ...[
@@ -179,6 +181,7 @@ class _RestaurantCarouselCard extends StatelessWidget {
                         ? CachedNetworkImage(
                             imageUrl: restaurant.imageUrl!,
                             fit: BoxFit.cover,
+                            memCacheWidth: 520,
                             placeholder: (_, __) =>
                                 Container(color: AppColors.background),
                             errorWidget: (_, __, ___) => _placeholder(),
@@ -260,6 +263,8 @@ class _RestaurantCarouselCard extends StatelessWidget {
                         ? CachedNetworkImage(
                             imageUrl: restaurant.imageUrl!,
                             fit: BoxFit.cover,
+                            memCacheWidth: 80,
+                            memCacheHeight: 80,
                           )
                         : const Icon(Icons.restaurant,
                             color: AppColors.textSecondary, size: 20),

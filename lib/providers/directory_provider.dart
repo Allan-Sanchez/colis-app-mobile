@@ -8,6 +8,7 @@ import 'dio_provider.dart';
 
 final directoryCategoriesProvider =
     FutureProvider<List<DirectoryCategory>>((ref) async {
+  ref.keepAlive();
   final repo = ref.read(directoryRepositoryProvider);
   final response = await repo.getCategories();
   return response.data ?? [];
@@ -15,6 +16,7 @@ final directoryCategoriesProvider =
 
 final directoryProfilesProvider =
     FutureProvider<List<DirectoryProfile>>((ref) async {
+  ref.keepAlive();
   final repo = ref.read(directoryRepositoryProvider);
   final response = await repo.getProfiles();
   return response.data ?? [];
@@ -25,6 +27,15 @@ final featuredProfilesProvider =
   return ref.watch(directoryProfilesProvider).whenData(
         (profiles) => profiles.where((p) => p.planTier == 'standard' || p.planTier == 'premium').toList(),
       );
+});
+
+// Provider dedicado para el Home: llama al endpoint filtrado en el servidor.
+// Solo descarga los destacados (max 10), sin cargar toda la colección.
+final featuredProfilesHomeProvider = FutureProvider<List<DirectoryProfile>>((ref) async {
+  ref.keepAlive();
+  final repo = ref.read(directoryRepositoryProvider);
+  final response = await repo.getFeaturedProfiles(limit: 10);
+  return response.data ?? [];
 });
 
 final profileByIdProvider =

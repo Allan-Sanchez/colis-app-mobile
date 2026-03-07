@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:dio/dio.dart';
 import '../../core/constants/app_constants.dart';
+import '../../core/constants/api_constants.dart';
 import '../../providers/menu_provider.dart';
 import '../../providers/restaurant_provider.dart';
 import '../../models/menu_category.dart';
@@ -32,6 +35,28 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
   int _selectedCategoryIndex = 0;
   final _searchController = TextEditingController();
   String _searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // Asociar el token FCM de este dispositivo con el restaurante abierto
+    // para que las campañas segmentadas por restaurante lleguen a estos usuarios.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _registerRestaurantToken());
+  }
+
+  Future<void> _registerRestaurantToken() async {
+    try {
+      final token = await FirebaseMessaging.instance.getToken();
+      if (token == null) return;
+      Dio(BaseOptions(baseUrl: ApiConstants.baseUrl))
+          .post(ApiConstants.deviceTokens, data: {
+        'fcmToken': token,
+        'platform': 'android',
+        'restaurantId': widget.restaurantId,
+        'interests': ['restaurants', 'directory'],
+      }).catchError((_) {});
+    } catch (_) {}
+  }
 
   @override
   void dispose() {

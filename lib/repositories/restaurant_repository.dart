@@ -18,6 +18,17 @@ class RestaurantRepository {
     );
   }
 
+  Future<ApiResponse<List<Restaurant>>> getFeaturedRestaurants({int limit = 10}) async {
+    final response = await _dio.get(
+      ApiConstants.restaurants,
+      queryParameters: {'featured': 'true', 'limit': limit},
+    );
+    return ApiResponse.fromJson(
+      response.data,
+      (json) => (json as List).map((e) => Restaurant.fromJson(e)).toList(),
+    );
+  }
+
   Future<ApiResponse<Restaurant>> getRestaurantById(int id) async {
     final response = await _dio.get('${ApiConstants.restaurants}/$id');
     return ApiResponse.fromJson(

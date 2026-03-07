@@ -6,6 +6,8 @@ import '../repositories/menu_repository.dart';
 import '../repositories/search_repository.dart';
 import '../repositories/order_repository.dart';
 import '../repositories/plan_request_repository.dart';
+import '../repositories/analytics_repository.dart';
+import '../repositories/review_repository.dart';
 
 final dioClientProvider = Provider<DioClient>((ref) {
   return DioClient();
@@ -33,4 +35,12 @@ final orderRepositoryProvider = Provider<OrderRepository>((ref) {
 
 final planRequestRepositoryProvider = Provider<PlanRequestRepository>((ref) {
   return PlanRequestRepository(ref.read(dioClientProvider).dio);
+});
+
+final analyticsRepositoryProvider = Provider<AnalyticsRepository>((ref) {
+  return AnalyticsRepository(ref.read(dioClientProvider).dio);
+});
+
+final reviewRepositoryProvider = Provider<ReviewRepository>((ref) {
+  return ReviewRepository(ref.read(dioClientProvider).dio);
 });

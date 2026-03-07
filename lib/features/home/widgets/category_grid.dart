@@ -107,6 +107,8 @@ class _CategoryItem extends StatelessWidget {
                       child: CachedNetworkImage(
                         imageUrl: category.imageUrl!,
                         fit: BoxFit.cover,
+                        memCacheWidth: 72,
+                        memCacheHeight: 72,
                         placeholder: (_, __) => const Icon(
                           Icons.category_rounded,
                           color: AppColors.primary,

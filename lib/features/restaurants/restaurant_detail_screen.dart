@@ -9,14 +9,32 @@ import '../shared/widgets/location_map_widget.dart';
 import '../shared/widgets/favorite_button.dart';
 import '../shared/widgets/social_tile.dart';
 import '../shared/widgets/upgrade_plan_modal.dart';
+import '../shared/widgets/reviews_section.dart';
+import '../../../providers/dio_provider.dart';
 
-class RestaurantDetailScreen extends ConsumerWidget {
+class RestaurantDetailScreen extends ConsumerStatefulWidget {
   final int restaurantId;
 
   const RestaurantDetailScreen({super.key, required this.restaurantId});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<RestaurantDetailScreen> createState() => _RestaurantDetailScreenState();
+}
+
+class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen> {
+  bool _viewTracked = false;
+
+  void _track(String eventType) {
+    ref.read(analyticsRepositoryProvider).track(
+      entityType: 'restaurant',
+      entityId: widget.restaurantId,
+      eventType: eventType,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final restaurantId = widget.restaurantId;
     final restaurantAsync = ref.watch(restaurantByIdProvider(restaurantId));
     final socialsAsync = ref.watch(restaurantSocialsByIdProvider(restaurantId));
     final locationsAsync =
@@ -34,6 +52,12 @@ class RestaurantDetailScreen extends ConsumerWidget {
         data: (restaurant) {
           if (restaurant == null) {
             return const Center(child: Text('Restaurante no encontrado'));
+          }
+
+          // Track view once
+          if (!_viewTracked) {
+            _viewTracked = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) => _track('view'));
           }
 
           // Find WhatsApp number from socials
@@ -267,6 +291,11 @@ class RestaurantDetailScreen extends ConsumerWidget {
                               );
                             },
                           ),
+                          // Reviews section
+                          ReviewsSection(
+                            entityType: 'restaurant',
+                            entityId: restaurantId,
+                          ),
                         ],
                       ),
                     ),
@@ -278,7 +307,10 @@ class RestaurantDetailScreen extends ConsumerWidget {
                 Positioned(
                   bottom: 24,
                   right: 20,
-                  child: _WhatsAppFab(number: whatsappNumber),
+                  child: _WhatsAppFab(
+                    number: whatsappNumber,
+                    onTap: () => _track('whatsapp_click'),
+                  ),
                 ),
             ],
           );
@@ -426,13 +458,15 @@ class _SectionTitle extends StatelessWidget {
 
 class _WhatsAppFab extends StatelessWidget {
   final String number;
+  final VoidCallback? onTap;
 
-  const _WhatsAppFab({required this.number});
+  const _WhatsAppFab({required this.number, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
+        onTap?.call();
         final cleanNumber = number.replaceAll(RegExp(r'[^0-9+]'), '');
         final uri = Uri.parse('https://wa.me/$cleanNumber');
         if (await canLaunchUrl(uri)) {

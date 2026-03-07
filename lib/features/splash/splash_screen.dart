@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/app_constants.dart';
+import '../../providers/restaurant_provider.dart';
+import '../../providers/directory_provider.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
+class _SplashScreenState extends ConsumerState<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -26,10 +29,15 @@ class _SplashScreenState extends State<SplashScreen>
     );
     _controller.forward();
 
+    // Pre-warming: inicia las llamadas del Home en paralelo mientras el splash
+    // se muestra. Usa los endpoints filtrados (solo destacados) para que el
+    // Home reciba datos pequeños y rápidos al abrir.
+    ref.read(featuredRestaurantsHomeProvider.future).ignore();
+    ref.read(directoryCategoriesProvider.future).ignore();
+    ref.read(featuredProfilesHomeProvider.future).ignore();
+
     Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        context.go('/home');
-      }
+      if (mounted) context.go('/home');
     });
   }
 

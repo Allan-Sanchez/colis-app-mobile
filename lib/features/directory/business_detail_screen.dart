@@ -9,14 +9,32 @@ import '../shared/widgets/location_map_widget.dart';
 import '../shared/widgets/favorite_button.dart';
 import '../shared/widgets/social_tile.dart';
 import '../shared/widgets/upgrade_plan_modal.dart';
+import '../shared/widgets/reviews_section.dart';
+import '../../../providers/dio_provider.dart';
 
-class BusinessDetailScreen extends ConsumerWidget {
+class BusinessDetailScreen extends ConsumerStatefulWidget {
   final int profileId;
 
   const BusinessDetailScreen({super.key, required this.profileId});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<BusinessDetailScreen> createState() => _BusinessDetailScreenState();
+}
+
+class _BusinessDetailScreenState extends ConsumerState<BusinessDetailScreen> {
+  bool _viewTracked = false;
+
+  void _track(String eventType) {
+    ref.read(analyticsRepositoryProvider).track(
+      entityType: 'directory_profile',
+      entityId: widget.profileId,
+      eventType: eventType,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final profileId = widget.profileId;
     final profileAsync = ref.watch(profileByIdProvider(profileId));
     final contactsAsync = ref.watch(profileContactsByIdProvider(profileId));
     final locationsAsync = ref.watch(profileLocationsByIdProvider(profileId));
@@ -45,6 +63,12 @@ class BusinessDetailScreen extends ConsumerWidget {
         data: (profile) {
           if (profile == null) {
             return const Center(child: Text('Negocio no encontrado'));
+          }
+
+          // Track view once
+          if (!_viewTracked) {
+            _viewTracked = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) => _track('view'));
           }
 
           return SingleChildScrollView(
@@ -76,6 +100,7 @@ class BusinessDetailScreen extends ConsumerWidget {
                                 label: 'Llámanos',
                                 value: c.phoneNumber!,
                                 onTap: () async {
+                                  _track('phone_click');
                                   final uri = Uri.parse('tel:${c.phoneNumber}');
                                   if (await canLaunchUrl(uri)) {
                                     await launchUrl(uri);
@@ -282,6 +307,11 @@ class BusinessDetailScreen extends ConsumerWidget {
                             ),
                           ],
                         ),
+                      ),
+                      // Reviews section
+                      ReviewsSection(
+                        entityType: 'directory_profile',
+                        entityId: profileId,
                       ),
                     ],
                   ),

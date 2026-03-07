@@ -44,16 +44,18 @@ class FeaturedBusinessesSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 14),
-        SizedBox(
-          height: 180,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemCount: businesses.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (context, index) {
-              return _BusinessCard(business: businesses[index]);
-            },
+        RepaintBoundary(
+          child: SizedBox(
+            height: 180,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: businesses.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 12),
+              itemBuilder: (context, index) {
+                return _BusinessCard(business: businesses[index]);
+              },
+            ),
           ),
         ),
       ],
@@ -105,6 +107,8 @@ class _BusinessCard extends StatelessWidget {
                       ? CachedNetworkImage(
                           imageUrl: business.imageUrl!,
                           fit: BoxFit.cover,
+                          memCacheWidth: 128,
+                          memCacheHeight: 128,
                           placeholder: (_, __) =>
                               const Icon(Icons.store, color: AppColors.textSecondary, size: 28),
                           errorWidget: (_, __, ___) =>

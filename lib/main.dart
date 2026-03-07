@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,6 +34,14 @@ void main() async {
   }
 
   final prefs = await SharedPreferences.getInstance();
+
+  // Generar deviceId único y persistente si aún no existe
+  if (!prefs.containsKey('device_id')) {
+    final random = Random.secure();
+    final id = List.generate(32, (_) => random.nextInt(16).toRadixString(16)).join();
+    await prefs.setString('device_id', id);
+  }
+
   _container = ProviderContainer(
     overrides: [
       sharedPreferencesProvider.overrideWithValue(prefs),

@@ -5,6 +5,7 @@ import '../models/restaurant_social.dart';
 import 'dio_provider.dart';
 
 final restaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
+  ref.keepAlive();
   final repo = ref.read(restaurantRepositoryProvider);
   final response = await repo.getRestaurants();
   return response.data ?? [];
@@ -14,6 +15,15 @@ final featuredRestaurantsProvider = Provider<AsyncValue<List<Restaurant>>>((ref)
   return ref.watch(restaurantsProvider).whenData(
         (restaurants) => restaurants.where((r) => r.planTier == 'standard' || r.planTier == 'premium').toList(),
       );
+});
+
+// Provider dedicado para el Home: llama al endpoint filtrado en el servidor.
+// Solo descarga los destacados (max 10), sin cargar toda la colección.
+final featuredRestaurantsHomeProvider = FutureProvider<List<Restaurant>>((ref) async {
+  ref.keepAlive();
+  final repo = ref.read(restaurantRepositoryProvider);
+  final response = await repo.getFeaturedRestaurants(limit: 10);
+  return response.data ?? [];
 });
 
 final restaurantByIdProvider =
